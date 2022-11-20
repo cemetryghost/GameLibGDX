@@ -1,0 +1,12 @@
+skin.png
+size: 430, 190
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+button
+  rotate: false
+  xy: 0, 0
+  size: 430, 190
+  orig: 430, 190
+  offset: 0, 0
+  index: -1
