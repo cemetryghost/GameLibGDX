@@ -11,8 +11,14 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MyGdxGame extends Game {
+	public static int b = 0;
+	public static int a = 0;
+	public static int y = 0;
+	public static int z = 0;
+	public static int counter = 0;
+    public static int c;
 
-	@Override
+    @Override
 	public void create() {
 		setScreen(new MainMenuScreen(this));
 	};}

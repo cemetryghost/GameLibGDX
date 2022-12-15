@@ -20,6 +20,8 @@ public class KeyboardAdapter extends Sprite implements InputProcessor {
     public static Vector2 velocity = new Vector2();
     public float speed = 10 * 20,  gravity = 0, animationTime = 0, increment;
     private String blockedKey = "blocked";
+    private String dialogKey = "dialog";
+    public static String getKeyValue = "";
     private TiledMapTileLayer collisionLayer;
     public static Vector3 direction = new Vector3();
     boolean collideX, collideY,
@@ -27,48 +29,30 @@ public class KeyboardAdapter extends Sprite implements InputProcessor {
             wasCollideLeft, wasCollideRight,
             wasCollideTop, wasCollideBottom,
             xBlocked, yBlocked = false;
+    public static boolean isDialog = false;
     public static float getPosX;
     public static float getPosY;
     private Sprite sprite;
-    private Animation still, left, right;
+    private Animation still, left, right, up, down;
 
-    public KeyboardAdapter(Animation still, Animation left, Animation right, TiledMapTileLayer collisionLayer){
+    public KeyboardAdapter(Animation still, Animation left, Animation right, Animation up, Animation down, TiledMapTileLayer collisionLayer){
         super((TextureRegion) still.getKeyFrame(0));
         this.still = still;
         this.left = left;
         this.right = right;
+        this.up = up;
+        this.down = down;
         this.collisionLayer = collisionLayer;
-        setSize(collisionLayer.getWidth() / 3, collisionLayer.getHeight() * 1.25f);
-        //        super(sprite);
-//        this.sprite = sprite;
-//        getPosX = sprite.getX();
-//        getPosY = sprite.getY();
-//        this.collisionLayer = collisionLayer;
-        // setSize(getWidth() , getHeight() );
     }
-
-//    public void spriteUpdate(){
-//       this.sprite = new Sprite(new TextureRegion(Character.boyAnimation.getFrame()));
-//       Play.inputProcessor = new KeyboardAdapter(this.sprite, this.collisionLayer);
-//    }
 
     @Override
     public void draw(Batch spriteBatch){
         update(Gdx.graphics.getDeltaTime());
         super.draw(spriteBatch);
-
-
-//        super.draw(spriteBatch);
-//        Play.camera.translate(getPosX, getPosY);
-//        Play.character.render();
-//        spriteBatch.draw(Character.boyAnimation.getFrame(), velocity.x, velocity.y);
-//        update(Gdx.graphics.getDeltaTime());
-
     }
 
     public void update(float delta) {
         float oldX = getX(), oldY = getY(), tileWidth = Play.collisionLayer.getTileWidth(), tileHeight = Play.collisionLayer.getTileHeight();
-        //boolean collisionX = false, collisionY = false;
         setX(getX() + velocity.x * delta);
 
         if (velocity.x < 0) {
@@ -79,8 +63,8 @@ public class KeyboardAdapter extends Sprite implements InputProcessor {
             wasCollideRight = collideX;
         }
 
-        increment = collisionLayer.getTileWidth();
-        increment = getWidth() < increment ? getWidth() / 2 : increment / 2;
+//        increment = collisionLayer.getTileWidth();
+//        increment = getWidth() < increment ? getWidth() / 2 : increment / 2;
 
         if (collideX) {
             setX(oldX);
@@ -110,128 +94,21 @@ public class KeyboardAdapter extends Sprite implements InputProcessor {
         } else {
             wasCollideY = false;
         }
-//        float oldX = getX(), oldY = getY(), tileWidth = Play.collisionLayer.getTileWidth(), tileHeight = Play.collisionLayer.getTileHeight();
-//        velocity.y -= gravity * delta;
 //
-//        // clamp velocity
-//        if(velocity.y > speed)
-//            velocity.y = speed;
-//        else if(velocity.y < -speed)
-//            velocity.y = -speed;
-//
-//        // save old position
-//
-//        boolean collisionX = false, collisionY = false;
-//
-//        // move on x
-//        setX(getX() + velocity.x * delta);
-//        if (velocity.x < 0) {
-//            collideX = collidesLeft();
-//            wasCollideLeft = collideX;
-//        } else if (velocity.x > 0) {
-//            collideX = collidesRight();
-//            wasCollideRight = collideX;
-//        }
-//        // calculate the increment for step in #collidesLeft() and #collidesRight()
-//        increment = collisionLayer.getTileWidth();
-//        increment = getWidth() < increment ? getWidth() / 2 : increment / 2;
-//
-//        if (collideX) {
-//            setX(oldX);
-//            velocity.x = 0;
-//            wasCollideX = true;
-//        }else {
-//            wasCollideX = false;
-//        }
-//
-//        if(velocity.x < 0) // going left
-//            collisionX = collidesLeft();
-//        else if(velocity.x > 0) // going right
-//            collisionX = collidesRight();
-//
-//        // react to x collision
-//        if(collisionX) {
-//            setX(oldX);
-//            velocity.x = 0;
-//        }
-//
-//        // move on y
-//        setY(getY() + velocity.y * delta * 5f);
-//
-//        // calculate the increment for step in #collidesBottom() and #collidesTop()
-//        increment = collisionLayer.getTileHeight();
-//        increment = getHeight() < increment ? getHeight() / 2 : increment / 2;
-//
-//
-//
-//        // react to y collision
-//        if(collisionY) {
-//            setY(oldY);
-//            velocity.y = 0;
-//        }
         animationTime += delta;
-        setRegion((TextureRegion) (velocity.x < 0 ? left.getKeyFrame(animationTime) : velocity.x > 0 ? right.getKeyFrame(animationTime) : still.getKeyFrame(animationTime)));
+        setRegion((TextureRegion) (velocity.x < 0 ? left.getKeyFrame(animationTime) : velocity.x > 0 ? right.getKeyFrame(animationTime) : velocity.y > 0 ? down.getKeyFrame(animationTime) : velocity.y < 0 ? up.getKeyFrame(animationTime) :  still.getKeyFrame(animationTime)));
     }
     @Override
     public boolean keyDown(int keycode) {
-//        if(keycode == Input.Keys.A) {
-//            leftPassed = true;
-//            velocity.x -= speed;
-//            Play.boyOrin = "LEFT";
-//            Play.character.getBoyLeft();
-//            Character.counterAnimation = 0.0f;
-//        }
-//        if(keycode == Input.Keys.D) {
-//            rightPassed = true;
-//            velocity.x += speed;
-//            Play.boyOrin = "RIGHT";
-//            Play.character.getBoyRight();
-//            Character.counterAnimation = 0.0f;
-//        }
-//        if(keycode == Input.Keys.W) {
-//            upPassed = true;
-//            velocity.y += speed;
-//            Play.boyOrin = "UP";
-//            Play.character.getBoyUp();
-//            Character.counterAnimation = 0.0f;
-//        }
-//        if(keycode == Input.Keys.S) {
-//            downPassed = true;
-//            velocity.y -= speed;
-//            Play.boyOrin = "DOWN";
-//            Play.character.getBoyDown();
-//            Character.counterAnimation = 0.0f;
-//        }
-//
-//        return true;
-//        switch (keycode) {
-//            case Input.Keys.W:
-//                velocity.y += speed;
-//                getPosY = velocity.y / 50;
-//
-//                break;
-//            case Input.Keys.S:
-//                velocity.y -= speed;
-//
-//                break;
-//            case Input.Keys.A:
-//                velocity.x -= speed;
-//
-//                break;
-//            case Input.Keys.D:
-//                velocity.x += speed;
-//
-//                break;
-//        }
-//        return true;
+
         switch(keycode) {
             case Input.Keys.W:
                 velocity.y += speed;
-                getPosY = velocity.y / 50;
-
+                animationTime = 0;
                 break;
             case Input.Keys.S:
                 velocity.y -= speed;
+                animationTime = 0;
                 break;
             case Input.Keys.A:
                 velocity.x = -speed;
@@ -247,15 +124,11 @@ public class KeyboardAdapter extends Sprite implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
-//            Character.counterAnimation = 0.0f; //Обнуление счетчика, когда меняется ориентация
-        }
         switch (keycode) {
             case Input.Keys.W:
                 animationTime = 0;
                 if (!wasCollideTop){
                     velocity.y -= speed;
-                    getPosY = velocity.y / 50;
                 }
                 wasCollideTop = false;
                 if (!yBlocked){
@@ -358,33 +231,67 @@ public class KeyboardAdapter extends Sprite implements InputProcessor {
         return cell != null && cell.getTile() != null && cell.getTile().getProperties().containsKey(blockedKey);
     }
 
+    private boolean isCellDialog(float x, float y) {
+        TiledMapTileLayer.Cell cell = this.collisionLayer.getCell((int) (x /this.collisionLayer.getTileWidth()), (int) (y / this.collisionLayer.getTileHeight()));
+        if(cell != null && cell.getTile() != null && cell.getTile().getProperties().containsKey(dialogKey)){
+             getKeyValue = cell.getTile().getProperties().get(dialogKey, String.class);
+        }
+        return cell != null && cell.getTile() != null && cell.getTile().getProperties().containsKey(dialogKey);
+    }
+
+    public String getKeyValue(){
+        return getKeyValue;
+    }
+
     public boolean collidesRight() {
-        for(float step = 0; step < getHeight(); step += this.collisionLayer.getTileHeight() / 2)
-            if(isCellBlocked(getX() + getWidth(), getY() + step))
-                return true;
+        for(float step = 0; step < getHeight(); step += this.collisionLayer.getTileHeight() / 2) {
+            if (isCellDialog(getX() + getWidth(), getY() + step)){
+                isDialog = true;}
+            if (isCellBlocked(getX() + getWidth(), getY() + step)){
+                return true;}
+
+        }
+        isDialog = false;
         return false;
     }
 
     public boolean collidesLeft() {
-        for(float step = 0; step < getHeight(); step += this.collisionLayer.getTileHeight() / 2)
-            if(isCellBlocked(getX(), getY() + step))
+        for(float step = 0; step < getHeight(); step += this.collisionLayer.getTileHeight() / 2) {
+            if (isCellDialog(getX(), getY() + step))
+                isDialog = true;
+            if (isCellBlocked(getX(), getY() + step))
                 return true;
+
+        }
+        isDialog = false;
         return false;
     }
 
     public boolean collidesTop() {
-        for(float step = 0; step < getWidth(); step += this.collisionLayer.getTileWidth() / 2)
-            if(isCellBlocked(getX() + step, getY() + getHeight()))
+        for(float step = 0; step < getWidth(); step += this.collisionLayer.getTileWidth() / 2) {
+            if (isCellDialog(getX() + step, getY() + getHeight()))
+                 isDialog = true;
+            if (isCellBlocked(getX() + step, getY() + getHeight()))
                 return true;
+
+        }
+        isDialog = false;
         return false;
     }
 
     public boolean collidesBottom() {
-        for(float step = 0; step < getWidth(); step += this.collisionLayer.getTileWidth() / 2)
-            if(isCellBlocked(getX() + step, getY()))
+        for(float step = 0; step < getWidth(); step += this.collisionLayer.getTileWidth() / 2) {
+            if (isCellDialog(getX() + step, getY()))
+                 isDialog = true;
+            if (isCellBlocked(getX() + step, getY()))
                 return true;
+
+        }
+        isDialog = false;
         return false;
     }
+
+
 
     public String getSkin(){
         skin = "character.png";
